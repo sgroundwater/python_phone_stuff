@@ -1,9 +1,10 @@
 #!/usr/bin/python
-import smbus
-import time
-bus = smbus.SMBus(1)
+import smbus, time, sys, pygame
+from pygame import mixer
 
-# This is the address we setup in the Arduino Program
+# Get ready for some i2c stuff
+bus = smbus.SMBus(1)
+# Arduino i2c address
 address = 0x04
 
 def writeNumber(value):
@@ -14,41 +15,42 @@ def readNumber():
     number = bus.read_byte(address)
     return number
 
+pygame.init()
+pygame.mixer.init()
+tone = pygame.mixer.Sound("../FUN_sounds/Kenney_Sounds/1.ogg")
+
 while True:
-    #var = input("Enter 1 - 9: ")
-    foo = "99"
-    #if not var:
-    #    continue
-    writeNumber(foo)
-    #writeNumber(var)
-    #print("Nothing sent - RPI - Hi Arduino, I sent you ", var)
-    #print("RPI - Hi Arduino, I sent you also", foo)
-    #sleep one second
+    # Rotary Digit  - MIGHT NOT NEED - TRY REMOVING AT SOME POINT
+    r_digit = "99"
+    writeNumber(r_digit)
     time.sleep(1)
     number = readNumber()
     if number == 1:
         print("Dialed 1 Received")
         number == 0;
-        foo = "11"
-        writeNumber(foo)
+        r_digit = "11"
+        writeNumber(r_digit)
+        tone = pygame.mixer.Sound("../FUN_sounds/Kenney_Sounds/1.ogg")
+        tone.play()
+        time.sleep (20)
     if number == 2:
         print("Dialed 2 Received")
         number == 0;
-        foo = "22"
-        writeNumber(foo)
+        r_digit = "22"
+        writeNumber(r_digit)
     if number == 3:
         print("Dialed 3 Received")
         number == 0;
-        foo = "33"
-        writeNumber(foo)
+        r_digit = "33"
+        writeNumber(r_digit)
     if number == 4:
         print("Dialed 4 Received")
         number == 0;
-        foo = "44"
-        writeNumber(foo)
+        r_digit = "44"
+        writeNumber(r_digit)
     if number == 5:
         print("Dialed 5 Received")
         number == 0;
-        foo = "55"
-        writeNumber(foo)
+        r_digit = "55"
+        writeNumber(r_digit)
     print(number)
