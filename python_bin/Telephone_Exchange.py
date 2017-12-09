@@ -52,6 +52,14 @@ while True:
         number == 0;
         r_digit = "44"
         writeNumber(r_digit)
+        import subprocess
+        text = '"Hello world"'
+        filename = 'hello'
+        file=open(filename,'w')
+        file.write(text)
+        file.close()
+        subprocess.call('festival --tts '+filename, shell=True)
+
     if number == 5:
         print("Dialed 5 Received")
         number == 0;
