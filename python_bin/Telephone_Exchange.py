@@ -17,7 +17,7 @@ def readNumber():
 
 pygame.init()
 pygame.mixer.init()
-tone = pygame.mixer.Sound("../FUN_sounds/Kenney_Sounds/1.ogg")
+#tone  = pygame.mixer.Sound("../FUN_sounds/Kenney_Sounds/1.ogg")
 
 while True:
     # Rotary Digit  - MIGHT NOT NEED - TRY REMOVING AT SOME POINT
@@ -32,17 +32,21 @@ while True:
         writeNumber(r_digit)
         tone = pygame.mixer.Sound("../FUN_sounds/Kenney_Sounds/1.ogg")
         tone.play()
-        time.sleep (20)
+        # time.sleep (20)
     if number == 2:
         print("Dialed 2 Received")
         number == 0;
         r_digit = "22"
         writeNumber(r_digit)
+        tone = pygame.mixer.Sound("../FUN_sounds/Kenney_Sounds/2.ogg")
+        tone.play()
     if number == 3:
         print("Dialed 3 Received")
         number == 0;
         r_digit = "33"
         writeNumber(r_digit)
+        tone = pygame.mixer.Sound("../FUN_sounds/Kenney_Sounds/3.ogg")
+        tone.play()
     if number == 4:
         print("Dialed 4 Received")
         number == 0;
