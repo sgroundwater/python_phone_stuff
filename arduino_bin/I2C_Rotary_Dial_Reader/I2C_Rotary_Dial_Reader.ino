@@ -21,12 +21,18 @@ int cleared = 0;
 // Rotary Dial Constants
 int dialHasFinishedRotatingAfterMs = 100;
 int debounceDelay = 10;
+//
+const int offHookPin = 3;     // OFF THE HOOK BUTTON PIN
+int offHookState = 0;
+int offHook = 3;
+bool executed = false;
+bool hooked = false;
 
-void setup()
-{
+void setup(){
 pinMode(13, OUTPUT);
 Serial.begin(9600);
-pinMode(in, INPUT);
+//pinMode(in, INPUT);
+pinMode(offHookPin, INPUT);
 // initialize i2c as slave
 Wire.begin(SLAVE_ADDRESS);
 // define callbacks for i2c communication
@@ -34,10 +40,38 @@ Wire.onReceive(receiveData);
 Wire.onRequest(sendData);
 // WELCOME
 Serial.println("Insert Dime Here!");
+
 }
 
-void loop()
-{
+void loop() {
+// read OFF HOOK state of switch
+offHookState = digitalRead(offHookPin);
+
+int currentState = 1;
+int hookedState =1;
+
+if (offHookState == HIGH) {  // Off The Hook  
+    // turn LED on:
+    hooked = false;
+    delay (1000);
+    offHook = 6;
+    
+if (hookedState == 1 && hooked == false) {
+        hooked = true;
+        stopTone();
+}    
+    executed = false;
+    delay (1000);
+    offHook = 8;
+  } 
+  
+if (offHookState == LOW) { // Off The Hook
+if (currentState == 1 && executed == false) { // Play Tone Only OneTime
+        executed = true;
+        playTone();
+} 
+    
+// Read Rotary Dial Stuff ...
 int reading = digitalRead(in);
 if ((millis() - lastStateChangeTime) > dialHasFinishedRotatingAfterMs) {
 // the dial isn't being dialed, or has just finished being dialed.
@@ -46,12 +80,16 @@ if (needToPrint) {
 // line and reset the count. We mod the count by 10 because '0' will send 10 pulses.
 Serial.print(count % 10, DEC);
 digit_payload = (count % 10);
+executed = true;
+hooked = true;
 send_to_pi = 1;
 needToPrint = 0;
 count = 0;
 cleared = 0;
+offHook = 0;
+} 
 }
-}
+
 if (reading != lastState) {
 lastStateChangeTime = millis();
 }
@@ -67,7 +105,9 @@ needToPrint = 1; // we'll need to print this number (once the dial has finished 
 }
 }
 }
+
 lastState = reading;
+}
 }
 
 // callback for received data
@@ -78,21 +118,38 @@ Serial.print("data received: ");
 Serial.println(number);
 if (number == 1){
 if (state == 0){
-digitalWrite(13, HIGH); // set the LED on
 state = 1;
 }
 else{
-digitalWrite(13, LOW); // set the LED off
 state = 0;
 }
 }
 }
+
 }
+
+// Callback for dialtone
+void playTone() {
+    Serial.println("\nPlay Dialtone Here\n");
+    delay (100);
+    offHook = 5;
+}
+
+void stopTone() {
+    Serial.println("\nStop Dialtone Now\n");
+    delay (100);
+    offHook = 6;
+}
+
 // callback for sending data
 void sendData(){
 if (send_to_pi == 1){
 Wire.write(digit_payload);
 send_to_pi = 0;
+} else if (offHook == 5) {
+Wire.write(55);
+offHook = 4;
+} else if (offHook == 6) {
+Wire.write(56);
 }
 }
-
