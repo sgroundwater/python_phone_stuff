@@ -23,7 +23,7 @@ while True:
     # Rotary Digit  - MIGHT NOT NEED - TRY REMOVING AT SOME POINT
     #r_digit = "99"
     #writeNumber(r_digit)
-    time.sleep(1)
+    time.sleep(.6)
     number = readNumber()
     if number == 1:
         pygame.mixer.stop()
@@ -41,7 +41,13 @@ while True:
         writeNumber(r_digit)
         tone = pygame.mixer.Sound("../FUN_sounds/dial_tone.ogg")
         tone.play()
-        # time.sleep (20)
+    
+    if number == 56:
+        print("on hook")
+        pygame.mixer.stop()
+        number == 99;
+        r_digit = "11"
+        writeNumber(r_digit)
     if number == 2:
         print("Dialed 2 Received")
         number == 99;
